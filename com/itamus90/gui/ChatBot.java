@@ -61,12 +61,10 @@ public class ChatBot extends JFrame implements KeyListener
             //----Grab Quota---------
             String quote = input.getText();
             input.setText("");
-            addText("-->You:\t" + quote);
+            addText("-->You: " + quote + "\n");
             quote = quote.trim();
-
-            //----Check for matches--------
-
-            //----Default---------
+            byte response = 0;
+            containSubString(quote, response);
         }
     }
 
@@ -80,7 +78,7 @@ public class ChatBot extends JFrame implements KeyListener
         dialog.setText(dialog.getText() + quote);
     }
 
-    private void containSubString(String quote)
+    private void containSubString(String quote, byte response)
     {
         char mark = quote.charAt(quote.length() - 1);
 
@@ -90,11 +88,42 @@ public class ChatBot extends JFrame implements KeyListener
         }
 
         quote = quote.trim();
-        byte response = 0;
+
         /*
             0: We're searching through chatBot[][] for matches
             1: We didn't find anything in chatBot[][]
             2: We didn't find something in chatBot[][]
         */
+
+        //----Check for matches--------
+        int j = 0; //Which group we're checking
+
+        while (response == 0)
+        {
+            if (words.inArray(quote.toLowerCase(),words.getChatBotRow(j*2)))
+            {
+                response = 2;
+                int random = (int)Math.floor(Math.random() * ((words.getChatBotRow(j * 2 + 1).length)));
+                addText("-->Admin: " + words.getChatBot()[(j * 2) + 1][random]);
+            }
+
+            j++;
+
+            if (j*2 == words.getChatBot().length - 1 && response == 0)
+            {
+                response = 1;
+            }
+
+        }
+
+
+        //----Default---------
+        if (response == 1)
+        {
+            int random = (int)Math.floor(Math.random() * (words.getChatBotRow(words.getChatBot().length - 1).length));
+            addText("-->Admin: " + words.getChatBot()[(words.getChatBot().length - 1)][random]);
+        }
+
+        addText("\n");
     }
 }
